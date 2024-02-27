@@ -17,12 +17,21 @@ namespace WindowsFormsApp5
             InitializeComponent();
         }
 
-        const double dt = 0.01;
+        double dt = 0.01; //time steps
         double height, angle, speed;
-        double t, x, y;
+        double t, x, y, vx, vy;
+
 
 
         double cosa, sina;
+
+
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            dt = Convert.ToDouble(textBox1.Text.ToString());
+        }
+
         const double g = 9.81;
         int index = -1;
 
@@ -33,8 +42,13 @@ namespace WindowsFormsApp5
             angle = (double)EdAngle.Value;
             speed = (double)EdSpeed.Value;
 
+
+
             cosa = Math.Cos(angle * Math.PI / 180);
             sina = Math.Sin(angle * Math.PI / 180);
+
+
+
 
             t = 0;
             x = 0;
@@ -57,7 +71,22 @@ namespace WindowsFormsApp5
             t += dt;
             x = speed * cosa * t;
             y = speed * sina * t + height - g * t * t / 2;
+
+            vx = speed * cosa;
+            vy = speed * sina - g * t;
             chart1.Series[index].Points.AddXY(x, y);
+
+
+            //Max height
+            textHeight.Text = ((speed * sina * speed * sina) / (2 * g) + height).ToString();
+            //Distance
+            textDistance.Text = Math.Sqrt(x * x + y * y).ToString();
+            //speed at the end point
+            textEndSpeed.Text = Math.Sqrt(vx * vx + vy * vy).ToString();
+
+
+
+
 
             if (y <= 0) timer1.Stop();
 
